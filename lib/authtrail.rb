@@ -71,7 +71,10 @@ module AuthTrail
 end
 
 Warden::Manager.after_set_user except: :fetch do |user, auth, opts|
-  AuthTrail::Manager.after_set_user(user, auth, opts)
+  request = ActionDispatch::Request.new(auth.env)
+  unless request.params[:admin_login].present? && request.params[:admin_login] == true
+    AuthTrail::Manager.after_set_user(user, auth, opts)
+  end
 end
 
 Warden::Manager.before_failure do |env, opts|
