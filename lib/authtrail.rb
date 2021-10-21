@@ -43,7 +43,7 @@ module AuthTrail
 
     # if exclude_method throws an exception, default to not excluding
     exclude = AuthTrail.exclude_method && AuthTrail.safely(default: false) { AuthTrail.exclude_method.call(data) }
-
+    
     unless exclude
       if AuthTrail.track_method
         AuthTrail.track_method.call(data)
@@ -52,8 +52,10 @@ module AuthTrail
         data.each do |k, v|
           login_activity.try("#{k}=", v)
         end
-        login_activity.save!
-        AuthTrail::GeocodeJob.perform_later(login_activity) if AuthTrail.geocode
+        unless request.params[:admin_login].present? && request.params[:admin_login] == true
+          login_activity.save!
+          AuthTrail::GeocodeJob.perform_later(login_activity) if AuthTrail.geocode
+        end
       end
     end
   end
