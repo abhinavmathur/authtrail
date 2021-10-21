@@ -13,7 +13,7 @@ Track Devise login activity
 Add this line to your application’s Gemfile:
 
 ```ruby
-gem 'authtrail'
+gem 'authtrail', github: 'abhinavmathur/authtrail'
 ```
 
 To encrypt email and IP addresses, install [Lockbox](https://github.com/ankane/lockbox) and [Blind Index](https://github.com/ankane/blind_index) and run:
